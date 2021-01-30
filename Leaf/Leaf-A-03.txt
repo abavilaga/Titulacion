@@ -1,0 +1,37 @@
+Leaf-A-03
+!
+boot nxos bootflash:/nxos.9.2.2.bin 
+hostname Leaf-A-03
+feature nxapi
+feature interface-vlan
+feature lacp
+feature vpc
+username admin pass admin
+no ip domain-lookup
+
+vlan 10
+  name LAN-Usuarios
+
+interface port-channel13
+  description *** TRUNK TO SPINE ***
+  switchport mode trunk
+  switchport trunk allowed vlan 10
+
+interface Ethernet1/1
+  description *** Spine-A-01 ***
+  channel-group 13 force
+
+interface Ethernet1/2
+  description *** Spine-A-02 ***
+  channel-group 13 force
+
+interface Ethernet1/4
+  no shutdown
+  description *** Test to vlan 10 ***
+  switchport access vlan 10
+
+interface Ethernet1/24
+  description *** MGMT ***
+  no switchport
+  ip address 192.168.1.12/24
+  no shutdown

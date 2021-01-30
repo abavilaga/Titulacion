@@ -1,0 +1,102 @@
+Spine-A-02
+!
+boot nxos bootflash:/nxos.9.2.2.bin 
+hostname Spine-A-02
+feature nxapi
+feature interface-vlan
+feature lacp
+feature vpc
+username admin pass admin
+no ip domain-lookup
+
+vlan 10
+  name LAN-Usuarios
+vlan 3966
+  name VPC-PEER-LINKS
+vlan 3967
+  name keepalive-link
+
+vrf context keepalive-link
+vrf context management
+vpc domain 1
+  peer-keepalive destination 1.1.1.1 source 1.1.1.2 vrf keepalive-link
+
+interface Vlan3967
+  no shutdown
+  vrf member keepalive-link
+  ip address 1.1.1.2/30
+
+interface port-channel10
+  no shutdown
+  description *** TO-Router ***
+  switchport mode trunk
+  switchport trunk allowed vlan 10
+  vpc 10
+
+interface port-channel11
+  no shutdown
+  description *** Leaf-A-01 ***
+  switchport mode trunk
+  switchport trunk allowed vlan 10
+  vpc 11
+
+interface port-channel12
+  no shutdown
+  description *** Leaf-A-02 ***
+  switchport mode trunk
+  switchport trunk allowed vlan 10
+  vpc 12
+
+interface port-channel13
+  no shutdown
+  description *** Leaf-A-03 ***
+  switchport mode trunk
+  switchport trunk allowed vlan 10
+  vpc 13
+
+interface port-channel3966
+  no shutdown
+  description *** VPC PEER LINKS ***
+  switchport mode trunk
+  switchport trunk allowed vlan 10,3966
+  spanning-tree port type network
+  vpc peer-link
+
+interface Ethernet1/1
+  no shutdown
+  description *** KEEPALIVE LINK ***
+  switchport access vlan 3967
+  spanning-tree port type network
+
+interface Ethernet1/2-3
+  no shutdown
+  description *** VPC PEER LINKS ***
+  switchport mode trunk
+  switchport trunk allowed vlan 10,3966
+  channel-group 3966 mode active
+
+interface Ethernet1/10
+  no shutdown
+  description *** TO-Router ***
+  channel-group 10 force
+
+interface Ethernet1/11
+  no shutdown
+  description *** Leaf-A-01 ***
+  channel-group 11 force 
+
+interface Ethernet1/12
+  no shutdown
+  description *** Leaf-A-02 ***
+  channel-group 12 force 
+
+interface Ethernet1/13
+  no shutdown
+  description *** Leaf-A-03 ***
+  channel-group 13 force 
+
+interface Ethernet1/24
+  no shutdown
+  description *** MGMT ***
+  no switchport
+  ip address 192.168.1.5/24
