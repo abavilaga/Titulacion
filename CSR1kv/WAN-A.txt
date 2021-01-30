@@ -1,0 +1,75 @@
+WAN-A
+!
+hostname WAN-A
+!
+no ip domain lookup
+!
+username admin password 0 admin
+!
+interface Loopback0
+ description *** Router ID ***
+ ip address 192.168.255.254 255.255.255.255
+!
+interface Port-channel1
+ description *** TRUNK TO SPINE ***
+ no ip address
+ no negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface Port-channel1.10
+ description *** LAN-Usuarios ***
+ encapsulation dot1Q 10
+ ip address 10.0.0.1 255.255.255.0
+!
+interface GigabitEthernet1
+ description *** Spine-A-01 ***
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ channel-group 1
+!
+interface GigabitEthernet2
+ description *** Spine-A-02 ***
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ channel-group 1
+!
+interface GigabitEthernet3
+ description *** TO_WAN-B ***
+ ip address 192.168.0.5 255.255.255.252
+ ip ospf network point-to-point
+ negotiation auto
+ ospfv3 hello-interval 1
+ ospfv3 dead-interval 4
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet4
+ description *** TO_WAN-C ***
+ ip address 192.168.0.1 255.255.255.252
+ ip ospf network point-to-point
+ negotiation auto
+ ospfv3 hello-interval 1
+ ospfv3 dead-interval 4
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet6
+ description *** MGMT ***
+ ip address 192.168.1.1 255.255.255.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+router ospf 1
+ passive-interface default
+ no passive-interface GigabitEthernet3
+ no passive-interface GigabitEthernet4
+ network 10.0.0.1 0.0.0.0 area 0
+ network 192.168.0.1 0.0.0.0 area 0
+ network 192.168.0.5 0.0.0.0 area 0
+!
