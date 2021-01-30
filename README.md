@@ -5,3 +5,5 @@ Aqui encontraran los siguientes archivos de configuracion:
 * Leaf
 * CSR1kv
 * Script de propagacion de vlans
+  * AutoNexus.py
+  * AutoRouter.py
