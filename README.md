@@ -9,4 +9,5 @@ Aqui encontraran los siguientes archivos de configuracion:
   * AutoRouter.py
 
 Topologia:
-https://github.com/abavilaga/Titulacion/blob/main/Topologia.png?raw=true
+![Alt text](https://github.com/abavilaga/Titulacion/blob/main/Topologia.png?raw=true "Topologia")
+
